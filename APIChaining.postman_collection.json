@@ -1,0 +1,124 @@
+{
+	"info": {
+		"_postman_id": "0b41113a-ec0a-4eba-b862-1ad15b3a1fca",
+		"name": "APIChaining",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21187153"
+	},
+	"item": [
+		{
+			"name": "ListUsers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"jsondata = JSON.parse (responseBody);\r",
+							"value = jsondata.data[0].last_name \r",
+							"pm.globals.set(\"username\", \"value\")\r",
+							"\r",
+							"var response = JSON.parse(responseBody);\r",
+							"tests [\"Validate total pages are 2\"] = response.total_pages == 2;\r",
+							"tests [\"Validate the last name\"] = response.data[1].email == 8;\r",
+							"tests [\"Validate the Presence of Url \"] = response.support[1].url == \"https://reqres.in/#support-heading\";"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/api/users?page=2",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"tests [\"Validate Job Tiltle\"] = response.job == \"leader\";\r",
+							"\r",
+							"tests[\"Validate endpoint returns a correct response code\"]= responseCode.code == 201; "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{username}}\",\r\n    \"job\": \"leader\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/users",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "username",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "baseURL",
+			"value": "https://reqres.in"
+		}
+	]
+}
